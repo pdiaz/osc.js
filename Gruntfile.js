@@ -80,4 +80,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-node-qunit");
 
     grunt.registerTask("default", ["clean", "jshint", "uglify", "qunit", "node-qunit"]);
+    grunt.registerTask("dist", ["clean", "jshint", "uglify"]);
+
 };

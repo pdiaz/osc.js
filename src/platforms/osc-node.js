@@ -163,7 +163,7 @@
 
         var that = this;
         this.socket.on("message", function (msg, rinfo) {
-            that.emit("data", msg, rinfo);
+            that.emit("data", msg, rinfo.address, rinfo.port);
         });
 
         this.socket.on("error", function (error) {

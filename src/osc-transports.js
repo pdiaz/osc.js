@@ -16,20 +16,20 @@ var osc = osc || require("./osc.js"),
     "use strict";
 
     // Unsupported, non-API function.
-    osc.firePacketEvents = function (port, packet, timeTag) {
+    osc.firePacketEvents = function (port, packet, timeTag, remoteAddress, remotePort) {
         if (packet.address) {
-            port.emit("message", packet, timeTag);
+            port.emit("message", packet, timeTag, remoteAddress, remotePort);
         } else {
-            osc.fireBundleEvents(port, packet, timeTag);
+            osc.fireBundleEvents(port, packet, timeTag, remoteAddress, remotePort);
         }
     };
 
     // Unsupported, non-API function.
-    osc.fireBundleEvents = function (port, bundle, timeTag) {
-        port.emit("bundle", bundle, timeTag);
+    osc.fireBundleEvents = function (port, bundle, timeTag, remoteAddress, remotePort) {
+        port.emit("bundle", bundle, timeTag, remoteAddress, remotePort);
         for (var i = 0; i < bundle.packets.length; i++) {
             var packet = bundle.packets[i];
-            osc.firePacketEvents(port, packet, bundle.timeTag);
+            osc.firePacketEvents(port, packet, bundle.timeTag, remoteAddress, remotePort);
         }
     };
 
@@ -55,13 +55,13 @@ var osc = osc || require("./osc.js"),
         return encoded;
     };
 
-    p.decodeOSC = function (data) {
-        this.emit("raw", data);
+    p.decodeOSC = function (data, remoteAddress, remotePort) {
+        this.emit("raw", data, remoteAddress, remotePort);
 
         var packet = osc.readPacket(data, this.options);
-        this.emit("osc", packet);
+        this.emit("osc", packet, remoteAddress, remotePort);
 
-        osc.firePacketEvents(this, packet);
+        osc.firePacketEvents(this, packet, null, remoteAddress, remotePort);
     };
 
 
